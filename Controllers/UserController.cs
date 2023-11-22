@@ -1,4 +1,5 @@
 ﻿using CantThinkOfATitle.Data;
+using CantThinkOfATitle.DTOs;
 using CantThinkOfATitle.Models;
 using CantThinkOfATitle.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -11,40 +12,73 @@ namespace CantThinkOfATitle.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly DataContext _dbContext;
 
-
-        public UserController(IUserService userService, DataContext dataContext)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _dbContext = dataContext;
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("GetUsers")]
-        public async Task<ActionResult<List<User>>> GetAllUsers()
+        public async Task<ActionResult<List<UserResponseDTO>>> GetAllUsers()
         {
-            return Ok(await _userService.GetAllUsers());
+            var response = await _userService.GetAllUsers();
+            if (!response.Success)
+            {
+                return BadRequest();
+            }
+            
+            return Ok(response);
         }
 
-        [HttpGet("GetUsers2")]
-        public async Task<ActionResult<List<User>>> GetAllUsers2()
-        {
-            var test = await _dbContext.Users.ToListAsync();
-            return Ok(test);
-        }
-
-        [HttpGet("GetSingleUserById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet("GetSingleUserById/{id}")]
         public async Task<ActionResult<User>> GetSingleUserById(int id)
         {
+            var response = await _userService.GetById(id);
+            if (!response.Success)
+            {
+                return BadRequest();
+            }
 
-            return Ok(_userService.GetById(id));
+            return Ok(response);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("AddUser")]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            var response = await _userService.AddUser(user);
+            if (!response.Success)
+            {
+                return BadRequest();
+            }
 
-            return Ok(_userService.AddUser(user));
+            return Ok(response);
+
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpPut("UpdateUser")]
+        public async Task<ActionResult<User>> UpdateUser(UserDTO user)
+        {
+            var response = await _userService.UpdateUser(user);
+            if (!response.Success)
+            {
+                return BadRequest();
+            }
+
+            return Ok(response);
 
         }
     }

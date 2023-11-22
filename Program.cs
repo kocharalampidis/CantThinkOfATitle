@@ -1,5 +1,5 @@
 using CantThinkOfATitle.Data;
-using CantThinkOfATitle.Repository;
+using CantThinkOfATitle.Data.Repository;
 using CantThinkOfATitle.Services;
 using CantThinkOfATitle.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;

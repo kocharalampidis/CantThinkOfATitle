@@ -8,11 +8,10 @@ namespace CantThinkOfATitle.Services.Interfaces
     {
         Task<UserResponse<List<UserResponseDTO>>> GetAllUsers();
 
-        Task<User> GetAllUsers2();
-
-
         Task<UserResponse<UserResponseDTO>> GetById(int id);
 
         Task<UserResponse<UserResponseDTO>> AddUser(User user);
+
+        Task<UserResponse<UserResponseDTO>> UpdateUser(UserDTO user);
     }
 }

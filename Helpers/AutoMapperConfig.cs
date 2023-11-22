@@ -9,6 +9,9 @@ namespace CantThinkOfATitle.Helpers
         public AutoMapperConfig()
         {
             CreateMap<UserResponseDTO, User>().ReverseMap();
+
+            CreateMap<UserDTO, User>().ReverseMap();
+
         }
     }
 }
