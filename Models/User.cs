@@ -9,10 +9,12 @@
         public string Email { get; set; }
 
         public string Phone { get; set; }
+        
+        public List<Posts> Posts { get; set; }
 
-       // private string Password { get; set; }
+        // private string Password { get; set; }
 
-    } 
+    }
 }
 
 //"id": 1,

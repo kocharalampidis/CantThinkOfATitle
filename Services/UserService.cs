@@ -50,14 +50,14 @@ namespace CantThinkOfATitle.Services
 
         }
 
-        public async Task<UserResponse<UserResponseDTO>> GetById(int id)
+        public async Task<UserResponse<UserResponseDTO>> GetUserByEmail(string email)
         {
 
             var response = new UserResponse<UserResponseDTO>();
 
             try
             {
-                var user = await _userRepo.GetUserById(id);
+                var user = await _userRepo.GetUserByEmail(email);
                 
                 if (user == null)
                 {
@@ -108,24 +108,23 @@ namespace CantThinkOfATitle.Services
 
         }
 
-        public async Task<UserResponse<UserResponseDTO>> UpdateUser(UserDTO user)
+        public async Task<UserResponse<UserResponseDTO>> UpdateUser(UserDTO user, string email)
         {
             var response = new UserResponse<UserResponseDTO>();
 
             try
             {
-                //var test = await _userRepo.GetUserById(user.Id);
 
-                //test = _mapper.Map<User>(user);
+                if (user == null)
+                {
+                    response.Success = false;
+                    response.Message = "User null";
+                    return response;
+                }
+                
                 var candidate = _mapper.Map<User>(user);
                 
                 await _userRepo.UpdateUser(candidate);
-
-                //if (candidate == null)
-                //{
-                //    response.Success = false;
-                //    return response;
-                //}
 
                 response.Data = _mapper.Map<UserResponseDTO>(candidate);
                 response.Success = true;
@@ -139,5 +138,34 @@ namespace CantThinkOfATitle.Services
                 return response;
             }
         }
+        
+        public async Task<UserResponse<UserResponseDTO>> DeleteUser(string email)
+        {
+            var response = new UserResponse<UserResponseDTO>();
+
+            try
+            {
+                //var test = await _userRepo.GetUserById(user.Id);
+
+                await _userRepo.DeleteUser(email);
+
+                //if (candidate == null)
+                //{
+                //    response.Success = false;
+                //    return response;
+                //}
+
+                response.Success = true;
+
+                return response;
+            }
+            catch (Exception)
+            {
+
+                response.Success = false;
+                return response;
+            }
+        }
+
     }
 }

@@ -23,9 +23,9 @@ namespace CantThinkOfATitle.Data.Repository
             return users;
         }
 
-        public async Task<User> GetUserById(int id)
+        public async Task<User> GetUserByEmail(string email)
         {
-            var users = await _dataContext.Users.FindAsync(id);
+            var users = await _dataContext.Users.SingleOrDefaultAsync(user => user.Email == email);
 
             return users;
         }
@@ -40,11 +40,18 @@ namespace CantThinkOfATitle.Data.Repository
 
         public async Task<User> UpdateUser(User user)
         {
-            var test = await _dataContext.Users.FindAsync(user.Id);
+            var test = await _dataContext.Users.SingleOrDefaultAsync(dbuser => dbuser.Email == user.Email);
             test.Email = user.Email;
             await _dataContext.SaveChangesAsync();
             return test;
         }
 
+        public async Task<User> DeleteUser(string email)
+        {
+            var test = await _dataContext.Users.SingleOrDefaultAsync(dbuser => dbuser.Email == email);
+            _dataContext.Users.Remove(test);
+            await _dataContext.SaveChangesAsync();
+            return test;
+        }
     }
 }

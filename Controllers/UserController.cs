@@ -38,10 +38,10 @@ namespace CantThinkOfATitle.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpGet("GetSingleUserById/{id}")]
-        public async Task<ActionResult<User>> GetSingleUserById(int id)
+        [HttpGet("GetSingleUser/{email}")]
+        public async Task<ActionResult<User>> GetSingleUser(string email)
         {
-            var response = await _userService.GetById(id);
+            var response = await _userService.GetUserByEmail(email);
             if (!response.Success)
             {
                 return BadRequest();
@@ -69,10 +69,27 @@ namespace CantThinkOfATitle.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPut("UpdateUser")]
-        public async Task<ActionResult<User>> UpdateUser(UserDTO user)
+        [HttpPut("UpdateUser/{email}")]
+        public async Task<ActionResult<User>> UpdateUser(UserDTO user, string email)
         {
-            var response = await _userService.UpdateUser(user);
+            var response = await _userService.UpdateUser(user, email);
+            if (!response.Success)
+            {
+                return BadRequest();
+            }
+
+            return Ok(response);
+
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpDelete("DeleteUser/{email}")]
+
+        public async Task<ActionResult<User>> DeleteUser(string email)
+        {
+            var response = await _userService.DeleteUser(email);
             if (!response.Success)
             {
                 return BadRequest();
