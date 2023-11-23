@@ -14,9 +14,17 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// DI Helpers
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-builder.Services.AddScoped<IUserService, UserService>();
+
+// DI Repository
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<IPostRepo, PostRepo>();
+
+
+// DI Services
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPostService, PostService>();
 
 
 
