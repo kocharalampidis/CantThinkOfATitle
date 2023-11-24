@@ -1,5 +1,6 @@
 using CantThinkOfATitle.Data;
 using CantThinkOfATitle.Data.Repository;
+using CantThinkOfATitle.Data.Repository.Interfaces;
 using CantThinkOfATitle.Services;
 using CantThinkOfATitle.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // DI Repository
+//builder.Services.AddTransient<IGenericRepo, GenericRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 

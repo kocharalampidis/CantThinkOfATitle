@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CantThinkOfATitle.Data;
-using CantThinkOfATitle.Data.Repository;
+using CantThinkOfATitle.Data.Repository.Interfaces;
 using CantThinkOfATitle.DTOs;
 using CantThinkOfATitle.Models;
 using CantThinkOfATitle.Responses;

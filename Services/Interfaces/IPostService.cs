@@ -7,7 +7,10 @@ namespace CantThinkOfATitle.Services.Interfaces
     public interface IPostService
     {
         Task<PostResponse<List<PostResponseDTO>>> GetAllPosts();
+        
+        Task<PostResponse<List<PostResponseDTO>>> GetUserPosts(int id);
 
+        Task<PostResponse<List<PostResponseDTO>>> GetPostsById(int id);
         //Task<PostResponse<PostResponseDTO>> GetPostsByUser(string email);
 
         //Task<PostResponse<PostResponseDTO>> CreatePost(User user);

@@ -1,7 +1,7 @@
 ﻿using CantThinkOfATitle.DTOs;
 using CantThinkOfATitle.Models;
 
-namespace CantThinkOfATitle.Data.Repository
+namespace CantThinkOfATitle.Data.Repository.Interfaces
 {
     public interface IUserRepo
     {

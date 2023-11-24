@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CantThinkOfATitle.Data;
-using CantThinkOfATitle.Data.Repository;
+using CantThinkOfATitle.Data.Repository.Interfaces;
 using CantThinkOfATitle.DTOs;
 using CantThinkOfATitle.Models;
 using CantThinkOfATitle.Responses;
@@ -46,5 +46,48 @@ namespace CantThinkOfATitle.Services
 
         }
 
+        public async Task<PostResponse<List<PostResponseDTO>>> GetUserPosts(int id)
+        {
+            var response = new PostResponse<List<PostResponseDTO>>();
+            try
+            {
+                var posts = await _postRepo.GetUserPosts(id);
+
+                response.Data = _mapper.Map<List<PostResponseDTO>>(posts);
+                response.Success = true;
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+
+                response.Success = false;
+                response.Message = ex.Message;
+
+                return response;
+            }
+        }
+
+        public async Task<PostResponse<List<PostResponseDTO>>> GetPostsById(int id)
+        {
+            var response = new PostResponse<List<PostResponseDTO>>();
+            try
+            {
+                var posts = await _postRepo.GetSinglePostById(id, ["User"]);
+
+                response.Data = _mapper.Map<List<PostResponseDTO>>(posts);
+                response.Success = true;
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+
+                response.Success = false;
+                response.Message = ex.Message;
+
+                return response;
+            }
+        }
     }
 }

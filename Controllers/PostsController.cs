@@ -33,5 +33,33 @@ namespace CantThinkOfATitle.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("GetPostPerUser/{id}")]
+        public async Task<ActionResult<List<PostResponseDTO>>> GetUserPosts(int id)
+        {
+            var response = await _postService.GetUserPosts(id);
+            if (!response.Success)
+            {
+                return BadRequest();
+            }
+
+            return Ok(response);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpGet("GetPostsById/{id}")]
+        public async Task<ActionResult<List<PostResponseDTO>>> GetPostsById(int id)
+        {
+            var response = await _postService.GetPostsById(id);
+            if (!response.Success)
+            {
+                return BadRequest();
+            }
+
+            return Ok(response);
+        }
     }
 }

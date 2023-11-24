@@ -1,4 +1,5 @@
 ﻿using CantThinkOfATitle.Data;
+using CantThinkOfATitle.Data.Repository.Interfaces;
 using CantThinkOfATitle.DTOs;
 using CantThinkOfATitle.Models;
 using CantThinkOfATitle.Responses;
@@ -10,15 +11,19 @@ namespace CantThinkOfATitle.Data.Repository
     public class UserRepo : IUserRepo
     {
         private readonly DataContext _dataContext;
+        private readonly IGenericRepo<User> _genericRepo;
 
         public UserRepo(DataContext dataContext)
         {
             _dataContext = dataContext;
+            _genericRepo = new GenericRepo<User>(_dataContext);
         }
+
 
         public async Task<List<User>> GetAllUsers()
         {
-            var users = await _dataContext.Users.ToListAsync();
+            var users = await _genericRepo.GetAll();
+            //var users = await _dataContext.Users.ToListAsync();
 
             return users;
         }
