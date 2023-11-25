@@ -20,12 +20,12 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // DI Repository
 //builder.Services.AddTransient<IGenericRepo, GenericRepo>();
-builder.Services.AddScoped<IUserRepo, UserRepo>();
+//builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 
 
 // DI Services
-builder.Services.AddScoped<IUserService, UserService>();
+//builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
 
 

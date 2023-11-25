@@ -8,8 +8,8 @@ namespace CantThinkOfATitle.Helpers
     {
         public AutoMapperConfig()
         {
-            CreateMap<UserResponseDTO, User>().ReverseMap();
-            CreateMap<UserDTO, User>().ReverseMap();
+            //CreateMap<UserResponseDTO, User>().ReverseMap();
+            //CreateMap<UserDTO, User>().ReverseMap();
             
             CreateMap<PostResponseDTO, Posts>().ReverseMap();
             CreateMap<PostDTO, Posts>().ReverseMap();

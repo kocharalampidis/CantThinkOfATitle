@@ -20,7 +20,7 @@ namespace CantThinkOfATitle.Data.Repository
         public async Task<List<Posts>> GetAllPosts()
         {
             var posts = await _dataContext.Posts
-                .Include(post => post.User)
+               // .Include(post => post.User)
                 .ToListAsync();
 
             return posts;
@@ -37,8 +37,8 @@ namespace CantThinkOfATitle.Data.Repository
         {
 
             var posts = await _dataContext.Posts
-                .Include(post => post.User)
-                .Where(post => post.User.Id == id)
+               // .Include(post => post.User)
+                //.Where(post => post.User.Id == id)
                 .ToListAsync();
 
             return posts;
