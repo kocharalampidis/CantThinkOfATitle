@@ -1,4 +1,5 @@
-﻿using CantThinkOfATitle.Models;
+﻿using CantThinkOfATitle.DTOs.Auth;
+using CantThinkOfATitle.Models;
 
 namespace CantThinkOfATitle.DTOs
 {
@@ -8,6 +9,6 @@ namespace CantThinkOfATitle.DTOs
 
         public string Body { get; set; }
 
-        public UserDTO User { get; set; }
+       // public UserDTO User { get; set; }
     }
 }
