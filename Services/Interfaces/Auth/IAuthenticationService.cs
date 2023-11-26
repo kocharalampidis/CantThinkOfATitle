@@ -5,7 +5,7 @@ namespace CantThinkOfATitle.Services.Interfaces.Auth
 {
     public interface IAuthenticationService
     {
-        Task<RegisterUserResponse<RegisterUserDTO>> Registration(RegisterUserDTO newUser);
+        Task<RegisterUserResponse<RegisterUserDTO>> Registration(RegisterUserDTO registerUserDTO);
 
         #region Login/Logout 
 

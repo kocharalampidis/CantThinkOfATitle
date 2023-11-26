@@ -4,6 +4,7 @@ using CantThinkOfATitle.DTOs.Auth;
 using CantThinkOfATitle.Models;
 using CantThinkOfATitle.Responses.Auth;
 using CantThinkOfATitle.Services.Interfaces;
+using CantThinkOfATitle.Services.Interfaces.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,17 +22,20 @@ namespace CantThinkOfATitle.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly IAuthenticationService _authenticationService;
 
         public AuthController
             (
             UserManager<IdentityUser> userManager, 
             RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IAuthenticationService authenticationService
             )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _authenticationService = authenticationService;
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -41,75 +45,34 @@ namespace CantThinkOfATitle.Controllers
         [HttpPost("Register")]
         public async Task<ActionResult<RegisterUserResponse<RegisterUserDTO>>> Register([FromBody] RegisterUserDTO registerUserDTO)
         {
-            var response = new RegisterUserResponse<RegisterUserDTO>();
-            var userExists = await _userManager.FindByEmailAsync(registerUserDTO.Email);
+            var response = await _authenticationService.Registration(registerUserDTO);
 
-            IdentityUser newUser = new IdentityUser() 
+            if (!response.Success)
             {
-                Email = registerUserDTO.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = registerUserDTO.UserName,
-                
-               
-            };
-
-            var userCreated = await _userManager.CreateAsync(newUser, registerUserDTO.Password);
-            if (!userCreated.Succeeded)
-            {
-                response.Message = userCreated.Errors.ToString();
+                response.Success = false;
+                response.Message = "Failed at controller";
             }
 
-            response.Message = "user created";
-            return Ok(response);
+            return response;
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO login)
+        public async Task<ActionResult<LoginResponse<LoginDTO>>> Login([FromBody] LoginDTO login)
         {
-            var user = await _userManager.FindByNameAsync(login.UserName);
-            if (user != null)
+            var response = await _authenticationService.Login(login);
+            if (!response.Success)
             {
-                var test = await _userManager
-                    .CheckPasswordAsync(user, login.Password);
-
-                var userRoles = await _userManager.GetRolesAsync(user);
-
-                var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
-
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-
-                var token = GetToken(authClaims);
-
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
+                return Unauthorized();
             }
-            return Unauthorized();
+
+            return response;
         }
 
-        private JwtSecurityToken GetToken(List<Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-
-            return token;
-        }
+        
     }
 }
