@@ -7,6 +7,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Azure.Core;
+using CantThinkOfATitle.Services.Interfaces;
+using CantThinkOfATitle.DTOs;
 
 namespace CantThinkOfATitle.Services.Auth
 {
@@ -17,19 +19,22 @@ namespace CantThinkOfATitle.Services.Auth
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
         public AuthenticationService
             (
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration configuration,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IEmailService emailService
             )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _contextAccessor = httpContextAccessor;
+            _emailService = emailService;
         }
 
 
@@ -137,8 +142,16 @@ namespace CantThinkOfATitle.Services.Auth
             var userEmail = _contextAccessor?.HttpContext.Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
             var authUser = await _userManager.FindByEmailAsync(userEmail);
 
-            var test = EmailConfirmation(authUser);
+            var mail = new EmailDTO()
+            { 
+                To = "test@test.com",
+                Subject = "TEST SUBJECT",
+                Body = "TEST BODY"  
+            };
+            
+            _emailService.SendEmail(mail);
 
+            
             return "";
         }
         public Task<string> ResendEmailConfirmation()

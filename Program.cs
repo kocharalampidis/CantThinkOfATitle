@@ -53,21 +53,19 @@ builder.Services.AddAuthentication(options =>
 
 });
 
-
-
 // DI Helpers
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddHttpContextAccessor();
 
 // DI Repository
 //builder.Services.AddTransient<IGenericRepo, GenericRepo>();
 //builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IPostRepo, PostRepo>();
-builder.Services.AddHttpContextAccessor();
 
 // DI Services
-//builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 
