@@ -134,8 +134,10 @@ namespace CantThinkOfATitle.Services.Auth
         #region Email
         public async Task<string> SendEmailConfirmation()
         {
-            var test = _contextAccessor?.HttpContext;
-                //.Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+            var userEmail = _contextAccessor?.HttpContext.Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+            var authUser = await _userManager.FindByEmailAsync(userEmail);
+
+            var test = EmailConfirmation(authUser);
 
             return "";
         }
@@ -154,6 +156,13 @@ namespace CantThinkOfATitle.Services.Auth
 
         #region Private Methods
 
+        private string EmailConfirmation(IdentityUser authUser)
+        {
+
+
+            return "";
+        }
+
         private string CreateToken(IdentityUser authUser)
         {
 
@@ -163,13 +172,14 @@ namespace CantThinkOfATitle.Services.Auth
                 {
                     new Claim(ClaimTypes.Name, authUser.UserName),
                     new Claim(ClaimTypes.Email, authUser.Email),
+                    new ("IsAuthenticated", "true")
                     //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
             var token = new JwtSecurityToken(
                issuer: _configuration["JWT:ValidIssuer"],
                audience: _configuration["JWT:ValidAudience"],
-               expires: DateTime.Now.AddHours(3),
+               expires: DateTime.Now.AddDays(7),
                claims: authClaims,
                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );

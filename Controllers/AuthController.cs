@@ -44,6 +44,7 @@ namespace CantThinkOfATitle.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost("Register")]
+        [AllowAnonymous]
         public async Task<ActionResult<RegisterUserResponse<RegisterUserDTO>>> Register([FromBody] RegisterUserDTO registerUserDTO)
         {
             var response = await _authenticationService.Registration(registerUserDTO);
@@ -76,9 +77,9 @@ namespace CantThinkOfATitle.Controllers
         }
 
         [HttpGet]
-        [Route("Ea")]
+        [Route("SendConfirmationEmail")]
         [Authorize]
-        public async Task<ActionResult> Easdas()
+        public async Task<ActionResult> SendConfirmationEmail()
         {
 
             await _authenticationService.SendEmailConfirmation();
