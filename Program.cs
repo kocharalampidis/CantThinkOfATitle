@@ -38,18 +38,20 @@ builder.Services.AddAuthentication(options =>
 
 // Adding Jwt Bearer
 .AddJwtBearer(options =>
- {
-     options.SaveToken = true;
-     options.RequireHttpsMetadata = false;
-     options.TokenValidationParameters = new TokenValidationParameters()
-     {
-         ValidateIssuer = true,
-         ValidateAudience = true,
-         ValidAudience = configuration["JWT:ValidAudience"],
-         ValidIssuer = configuration["JWT:ValidIssuer"],
-         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
-     };
- });
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = configuration["JWT:ValidAudience"],
+        ValidIssuer = configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+    };
+    options.IncludeErrorDetails = true;
+
+});
 
 
 
@@ -60,7 +62,7 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 //builder.Services.AddTransient<IGenericRepo, GenericRepo>();
 //builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IPostRepo, PostRepo>();
-
+builder.Services.AddHttpContextAccessor();
 
 // DI Services
 //builder.Services.AddScoped<IUserService, UserService>();

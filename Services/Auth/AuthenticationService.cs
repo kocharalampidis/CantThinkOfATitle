@@ -13,6 +13,7 @@ namespace CantThinkOfATitle.Services.Auth
     public class AuthenticationService : IAuthenticationService
 
     {
+        private readonly IHttpContextAccessor _contextAccessor;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
@@ -21,12 +22,14 @@ namespace CantThinkOfATitle.Services.Auth
             (
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _contextAccessor = httpContextAccessor;
         }
 
 
@@ -85,10 +88,12 @@ namespace CantThinkOfATitle.Services.Auth
 
                 response.Success = true;
                 response.Token = jwt;
-
+                //.HttpContext.Request.HttpContext.User.Claims
                 return response;
                 
             }
+
+            
 
             response.Success = false;
             return response;
@@ -127,9 +132,12 @@ namespace CantThinkOfATitle.Services.Auth
         #endregion
 
         #region Email
-        public Task<string> SendEmailConfirmation()
+        public async Task<string> SendEmailConfirmation()
         {
-            throw new NotImplementedException();
+            var test = _contextAccessor?.HttpContext;
+                //.Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+
+            return "";
         }
         public Task<string> ResendEmailConfirmation()
         {
@@ -154,7 +162,8 @@ namespace CantThinkOfATitle.Services.Auth
             var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, authUser.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(ClaimTypes.Email, authUser.Email),
+                    //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
             var token = new JwtSecurityToken(

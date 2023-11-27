@@ -5,6 +5,7 @@ using CantThinkOfATitle.Models;
 using CantThinkOfATitle.Responses.Auth;
 using CantThinkOfATitle.Services.Interfaces;
 using CantThinkOfATitle.Services.Interfaces.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,7 @@ namespace CantThinkOfATitle.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost]
         [Route("Login")]
+        [AllowAnonymous]
         public async Task<ActionResult<LoginResponse<LoginDTO>>> Login([FromBody] LoginDTO login)
         {
             var response = await _authenticationService.Login(login);
@@ -73,6 +75,16 @@ namespace CantThinkOfATitle.Controllers
             return response;
         }
 
-        
+        [HttpGet]
+        [Route("Ea")]
+        [Authorize]
+        public async Task<ActionResult> Easdas()
+        {
+
+            await _authenticationService.SendEmailConfirmation();
+
+            return Ok();
+        }
+
     }
 }
